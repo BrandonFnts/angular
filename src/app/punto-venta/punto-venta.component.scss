@@ -1,0 +1,182 @@
+.pos-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1rem 1.25rem;
+  gap: 1rem;
+}
+
+/* Search */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-width: 320px;
+
+  i {
+    color: #aaa;
+  }
+
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 0.85rem;
+    font-family: inherit;
+
+    &::placeholder {
+      color: #bbb;
+    }
+  }
+}
+
+/* Table */
+.table-wrapper {
+  flex: 1;
+  overflow-y: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+thead th {
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #555;
+  border-bottom: 2px solid #e5e7eb;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+tbody td {
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid #f0f0f0;
+  color: #333;
+}
+
+.col-delete {
+  width: 40px;
+  text-align: center;
+}
+
+.col-qty {
+  width: 120px;
+  text-align: center;
+}
+
+.col-price {
+  width: 100px;
+  text-align: right;
+}
+
+.empty-msg {
+  text-align: center;
+  color: #aaa;
+  padding: 2rem 0 !important;
+  font-size: 0.85rem;
+}
+
+/* Quantity controls */
+.qty-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  span {
+    min-width: 1.5rem;
+    text-align: center;
+    font-weight: 500;
+  }
+}
+
+/* Icon buttons */
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.15rem;
+  font-size: 1rem;
+  color: #888;
+  transition: color 0.15s;
+
+  &:hover {
+    color: #333;
+  }
+
+  &.delete:hover {
+    color: #d32f2f;
+  }
+}
+
+/* Footer */
+.pos-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 2px solid #e5e7eb;
+}
+
+.total {
+  font-size: 1.1rem;
+  display: flex;
+  gap: 0.5rem;
+
+  span {
+    color: #555;
+    font-weight: 500;
+  }
+
+  strong {
+    color: #1a1a2e;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.btn-cancel,
+.btn-charge {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  font-weight: 500;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s;
+}
+
+.btn-cancel {
+  background: #f0f0f0;
+  color: #333;
+
+  &:hover {
+    background: #e0e0e0;
+  }
+}
+
+.btn-charge {
+  background: #1a1a2e;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}

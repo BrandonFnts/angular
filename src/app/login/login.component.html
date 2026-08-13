@@ -1,1 +1,78 @@
-<p>login works!</p>
+<div class="login-container">
+  <form class="login-card" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+    <div class="brand">
+      <i class="bi bi-shop"></i>
+      <h1>Punto de Venta</h1>
+      <p>Inicia sesión en tu cuenta</p>
+    </div>
+
+    <!-- Email -->
+    <div class="field">
+      <label for="email">Correo electrónico</label>
+      <div class="input-wrapper">
+        <i class="bi bi-envelope"></i>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="correo@ejemplo.com"
+          autocomplete="email"
+        />
+      </div>
+      @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+        <span class="error">
+          @if (loginForm.get('email')?.hasError('required')) {
+            El correo es obligatorio.
+          } @else if (loginForm.get('email')?.hasError('minlength')) {
+            Mínimo 8 caracteres.
+          } @else if (loginForm.get('email')?.hasError('maxlength')) {
+            Máximo 64 caracteres.
+          } @else if (loginForm.get('email')?.hasError('pattern')) {
+            Ingresa un correo válido.
+          }
+        </span>
+      }
+    </div>
+
+    <!-- Contraseña -->
+    <div class="field">
+      <label for="password">Contraseña</label>
+      <div class="input-wrapper">
+        <i class="bi bi-lock"></i>
+        <input
+          id="password"
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+        <button type="button" class="toggle-pw" (click)="togglePassword()">
+          <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+        </button>
+      </div>
+      @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+        <span class="error">
+          @if (loginForm.get('password')?.hasError('required')) {
+            La contraseña es obligatoria.
+          } @else if (loginForm.get('password')?.hasError('minlength')) {
+            Mínimo 8 caracteres.
+          } @else if (loginForm.get('password')?.hasError('maxlength')) {
+            Máximo 20 caracteres.
+          } @else if (loginForm.get('password')?.hasError('pattern')) {
+            Debe incluir mayúscula, minúscula, número y carácter especial.
+          }
+        </span>
+      }
+    </div>
+
+    <button id="login-submit" type="submit" class="btn-login" [disabled]="loginForm.invalid">
+      Iniciar sesión
+    </button>
+
+    <p class="forgot">
+      <a href="#">¿Olvidaste tu contraseña?</a>
+    </p>
+
+  </form>
+</div>

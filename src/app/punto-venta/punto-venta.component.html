@@ -1,0 +1,72 @@
+<div class="pos-container">
+
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <i class="bi bi-search"></i>
+    <input
+      type="text"
+      placeholder="Buscar producto..."
+      [(ngModel)]="searchTerm"
+    />
+  </div>
+
+  <!-- Tabla de productos -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-delete"></th>
+          <th class="col-qty">Cantidad</th>
+          <th>Producto</th>
+          <th>SKU</th>
+          <th class="col-price">Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (productos.length === 0) {
+          <tr>
+            <td colspan="5" class="empty-msg">
+              No hay productos agregados
+            </td>
+          </tr>
+        }
+        @for (item of productos; track item.id) {
+          <tr>
+            <td class="col-delete">
+              <button class="btn-icon delete" (click)="eliminar(item.id)" title="Eliminar">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+            <td class="col-qty">
+              <div class="qty-controls">
+                <button class="btn-icon" (click)="decrementar(item)">
+                  <i class="bi bi-dash-circle"></i>
+                </button>
+                <span>{{ item.cantidad }}</span>
+                <button class="btn-icon" (click)="incrementar(item)">
+                  <i class="bi bi-plus-circle"></i>
+                </button>
+              </div>
+            </td>
+            <td>{{ item.producto }}</td>
+            <td>{{ item.sku }}</td>
+            <td class="col-price">{{ item.precio | currency:'MXN':'symbol-narrow' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Total y acciones -->
+  <div class="pos-footer">
+    <div class="total">
+      <span>TOTAL:</span>
+      <strong>{{ total | currency:'MXN':'symbol-narrow' }}</strong>
+    </div>
+    <div class="actions">
+      <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
+      <button class="btn-charge" (click)="cobrar()" [disabled]="productos.length === 0">Cobrar</button>
+    </div>
+  </div>
+
+</div>
