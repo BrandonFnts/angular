@@ -1,15 +1,15 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { ProductosComponent } from './productos/productos.component';
-import { PerfilesComponent } from './perfiles/perfiles.component';
-import { RegistroHorasComponent } from './registro-horas/registro-horas.component';
-import { UsuariosComponent } from './usuarios/usuarios.component';
-import { RegistroComponent } from './registro/registro.component';
-import { ReportesComponent } from './reportes/reportes.component';
-import { AlertasComponent } from './alertas/alertas.component';
-import { PuntoVentaComponent } from './punto-venta/punto-venta.component';
-import { TicketComponent } from './ticket/ticket.component';
-import { EmpleadosComponent } from './empleados/empleados.component';
+import { LoginComponent } from './login/login';
+import { ProductosComponent } from './productos/productos';
+import { PerfilesComponent } from './perfiles/perfiles';
+import { RegistroHorasComponent } from './registro-horas/registro-horas';
+import { UsuariosComponent } from './usuarios/usuarios';
+import { RegistroComponent } from './registro/registro';
+import { ReportesComponent } from './reportes/reportes';
+import { AlertasComponent } from './alertas/alertas';
+import { PuntoVentaComponent } from './punto-venta/punto-venta';
+import { TicketComponent } from './ticket/ticket';
+import { EmpleadosComponent } from './empleados/empleados';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },

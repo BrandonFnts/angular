@@ -1,19 +1,26 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.scss',
+  imports: [ReactiveFormsModule],
+  templateUrl: './login.html',
+  styleUrl: './login.scss',
 })
 export class LoginComponent {
   loginForm: FormGroup;
   showPassword = false;
+  errorMessage = '';
+  loading = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: [
         '',
@@ -40,11 +47,23 @@ export class LoginComponent {
     this.showPassword = !this.showPassword;
   }
 
-  onSubmit(): void {
-    if (this.loginForm.valid) {
-      console.log('Login:', this.loginForm.value);
-    } else {
+  async onSubmit(): Promise<void> {
+    if (!this.loginForm.valid) {
       this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    try {
+      const { email, password } = this.loginForm.value;
+      await this.auth.login(email, password);
+      this.router.navigate(['/punto-venta']);
+    } catch (err) {
+      this.errorMessage = err as string;
+    } finally {
+      this.loading = false;
     }
   }
 }

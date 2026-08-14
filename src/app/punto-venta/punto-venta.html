@@ -1,13 +1,33 @@
 <div class="pos-container">
 
   <!-- Barra de búsqueda -->
-  <div class="search-bar">
-    <i class="bi bi-search"></i>
-    <input
-      type="text"
-      placeholder="Buscar producto..."
-      [(ngModel)]="searchTerm"
-    />
+  <div class="search-wrapper">
+    <div class="search-bar">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        placeholder="Buscar producto por nombre o SKU..."
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        (focus)="onSearchFocus()"
+        (click)="onSearchFocus()"
+        (blur)="cerrarSugerencias()"
+      />
+    </div>
+    @if (showSugerencias) {
+      <ul class="sugerencias">
+        @for (prod of sugerencias; track prod.id) {
+          <li (mousedown)="seleccionarProducto(prod)">
+            <span class="sug-nombre">{{ prod.nombre }}</span>
+            <span class="sug-meta">
+              <span class="sug-sku">{{ prod.sku }}</span>
+              <span class="sug-precio">{{ prod.precio | currency:'MXN':'symbol-narrow' }}</span>
+              <span class="sug-stock">Stock: {{ prod.stock }}</span>
+            </span>
+          </li>
+        }
+      </ul>
+    }
   </div>
 
   <!-- Tabla de productos -->
@@ -23,14 +43,14 @@
         </tr>
       </thead>
       <tbody>
-        @if (productos.length === 0) {
+        @if (items.length === 0) {
           <tr>
             <td colspan="5" class="empty-msg">
-              No hay productos agregados
+              Busca y agrega productos para iniciar la venta
             </td>
           </tr>
         }
-        @for (item of productos; track item.id) {
+        @for (item of items; track item.id) {
           <tr>
             <td class="col-delete">
               <button class="btn-icon delete" (click)="eliminar(item.id)" title="Eliminar">
@@ -48,9 +68,9 @@
                 </button>
               </div>
             </td>
-            <td>{{ item.producto }}</td>
+            <td>{{ item.nombre }}</td>
             <td>{{ item.sku }}</td>
-            <td class="col-price">{{ item.precio | currency:'MXN':'symbol-narrow' }}</td>
+            <td class="col-price">{{ item.precio * item.cantidad | currency:'MXN':'symbol-narrow' }}</td>
           </tr>
         }
       </tbody>
@@ -65,7 +85,7 @@
     </div>
     <div class="actions">
       <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
-      <button class="btn-charge" (click)="cobrar()" [disabled]="productos.length === 0">Cobrar</button>
+      <button class="btn-charge" (click)="cobrar()" [disabled]="items.length === 0">Cobrar</button>
     </div>
   </div>
 
