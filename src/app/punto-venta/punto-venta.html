@@ -1,91 +1,132 @@
-<div class="pos-container">
+<div class="flex flex-col h-full p-6 gap-6 max-w-7xl mx-auto w-full">
 
-  <!-- Barra de búsqueda -->
-  <div class="search-wrapper">
-    <div class="search-bar">
-      <i class="bi bi-search"></i>
+  <!-- Buscador Premium -->
+  <div class="relative max-w-xl">
+    <div class="flex items-center gap-3 px-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm transition-all focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-500/5 focus-within:shadow-md">
+      <i class="bi bi-search text-blue-555 text-blue-500 text-base"></i>
       <input
         type="text"
-        placeholder="Buscar producto por nombre o SKU..."
+        placeholder="Buscar por marca, bebida, botana o SKU..."
         [(ngModel)]="searchTerm"
         (input)="onSearch()"
         (focus)="onSearchFocus()"
         (click)="onSearchFocus()"
         (blur)="cerrarSugerencias()"
+        class="flex-1 border-none outline-none text-sm font-sans text-slate-700 placeholder:text-slate-300 bg-transparent"
       />
     </div>
+    
+    <!-- Sugerencias Dropdown -->
     @if (showSugerencias) {
-      <ul class="sugerencias">
+      <ul class="absolute top-full left-0 right-0 mt-2 bg-white border border-slate-200 rounded-2xl max-h-72 overflow-y-auto z-30 shadow-2xl shadow-slate-200/60 list-none m-0 p-1.5 animate-fadeIn">
         @for (prod of sugerencias; track prod.id) {
-          <li (mousedown)="seleccionarProducto(prod)">
-            <span class="sug-nombre">{{ prod.nombre }}</span>
-            <span class="sug-meta">
-              <span class="sug-sku">{{ prod.sku }}</span>
-              <span class="sug-precio">{{ prod.precio | currency:'MXN':'symbol-narrow' }}</span>
-              <span class="sug-stock">Stock: {{ prod.stock }}</span>
-            </span>
+          <li
+            (mousedown)="seleccionarProducto(prod)"
+            class="flex justify-between items-center px-4 py-3 cursor-pointer text-sm rounded-xl transition-colors hover:bg-slate-50"
+          >
+            <div class="flex flex-col">
+              <span class="font-semibold text-slate-700">{{ prod.nombre }}</span>
+              <span class="text-[11px] text-slate-400 mt-0.5">{{ prod.sku }}</span>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-lg text-xs">{{ prod.precio | currency:'MXN':'symbol-narrow' }}</span>
+              <span class="text-[11px] font-medium text-slate-400 bg-slate-50 px-2 py-1 rounded-lg">Stock: {{ prod.stock }}</span>
+            </div>
           </li>
         }
       </ul>
     }
   </div>
 
-  <!-- Tabla de productos -->
-  <div class="table-wrapper">
-    <table>
-      <thead>
-        <tr>
-          <th class="col-delete"></th>
-          <th class="col-qty">Cantidad</th>
-          <th>Producto</th>
-          <th>SKU</th>
-          <th class="col-price">Precio</th>
-        </tr>
-      </thead>
-      <tbody>
-        @if (items.length === 0) {
-          <tr>
-            <td colspan="5" class="empty-msg">
-              Busca y agrega productos para iniciar la venta
-            </td>
+  <!-- Contenedor Principal de la Venta -->
+  <div class="flex-1 overflow-hidden flex flex-col bg-white rounded-2xl border border-slate-200/80 shadow-sm shadow-slate-100/50">
+    <div class="flex-1 overflow-y-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="border-b border-slate-100 bg-slate-50/75">
+            <th class="w-12 px-4 py-3.5"></th>
+            <th class="w-32 px-4 py-3.5 text-center text-xs font-semibold text-slate-400 uppercase tracking-wider">Cantidad</th>
+            <th class="px-4 py-3.5 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">Producto</th>
+            <th class="px-4 py-3.5 text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">SKU</th>
+            <th class="w-32 px-4 py-3.5 text-right text-xs font-semibold text-slate-400 uppercase tracking-wider">Subtotal</th>
           </tr>
-        }
-        @for (item of items; track item.id) {
-          <tr>
-            <td class="col-delete">
-              <button class="btn-icon delete" (click)="eliminar(item.id)" title="Eliminar">
-                <i class="bi bi-trash"></i>
-              </button>
-            </td>
-            <td class="col-qty">
-              <div class="qty-controls">
-                <button class="btn-icon" (click)="decrementar(item)">
-                  <i class="bi bi-dash-circle"></i>
+        </thead>
+        <tbody>
+          @if (items.length === 0) {
+            <tr>
+              <td colspan="5" class="text-center py-24">
+                <div class="w-16 h-16 rounded-full bg-slate-50 inline-flex items-center justify-center text-slate-300 text-3xl mb-4">
+                  <i class="bi bi-cart3"></i>
+                </div>
+                <p class="text-sm font-semibold text-slate-700">El carrito de compra está vacío</p>
+                <p class="text-xs text-slate-400 mt-1">Usa la barra superior para agregar productos de depósito</p>
+              </td>
+            </tr>
+          }
+          @for (item of items; track item.id; let last = $last) {
+            <tr class="transition-colors hover:bg-slate-50/50 group" [class.border-b]="!last" [class.border-slate-100]="!last">
+              <td class="px-4 py-4 text-center">
+                <button
+                  (click)="eliminar(item.id)"
+                  title="Eliminar"
+                  class="w-8 h-8 inline-flex items-center justify-center rounded-xl bg-transparent border-none cursor-pointer text-slate-300 transition-all hover:text-red-500 hover:bg-red-50"
+                >
+                  <i class="bi bi-trash text-sm"></i>
                 </button>
-                <span>{{ item.cantidad }}</span>
-                <button class="btn-icon" (click)="incrementar(item)">
-                  <i class="bi bi-plus-circle"></i>
-                </button>
-              </div>
-            </td>
-            <td>{{ item.nombre }}</td>
-            <td>{{ item.sku }}</td>
-            <td class="col-price">{{ item.precio * item.cantidad | currency:'MXN':'symbol-narrow' }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+              </td>
+              <td class="px-4 py-4">
+                <div class="flex items-center justify-center gap-2">
+                  <button
+                    (click)="decrementar(item)"
+                    class="w-8 h-8 inline-flex items-center justify-center rounded-xl bg-white border border-slate-200 cursor-pointer text-slate-400 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 active:scale-95"
+                  >
+                    <i class="bi bi-dash text-sm"></i>
+                  </button>
+                  <span class="w-8 text-center font-bold text-slate-700 text-sm tabular-nums">{{ item.cantidad }}</span>
+                  <button
+                    (click)="incrementar(item)"
+                    class="w-8 h-8 inline-flex items-center justify-center rounded-xl bg-white border border-slate-200 cursor-pointer text-slate-400 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 active:scale-95"
+                  >
+                    <i class="bi bi-plus text-sm"></i>
+                  </button>
+                </div>
+              </td>
+              <td class="px-4 py-4 text-slate-700 font-semibold">{{ item.nombre }}</td>
+              <td class="px-4 py-4">
+                <span class="text-xs font-semibold text-slate-400 bg-slate-100/80 px-2.5 py-1 rounded-lg">{{ item.sku }}</span>
+              </td>
+              <td class="px-4 py-4 text-right font-bold text-slate-800 tabular-nums text-[15px]">
+                {{ item.precio * item.cantidad | currency:'MXN':'symbol-narrow' }}
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <!-- Total y acciones -->
-  <div class="pos-footer">
-    <div class="total">
-      <span>TOTAL:</span>
-      <strong>{{ total | currency:'MXN':'symbol-narrow' }}</strong>
+  <!-- Total y Cobro -->
+  <div class="flex flex-col sm:flex-row items-center justify-between bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-slate-100/30 px-6 py-4 gap-4">
+    <div class="flex items-baseline gap-2.5">
+      <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Total Venta</span>
+      <span class="text-3xl font-extrabold text-slate-800 bg-gradient-to-r from-slate-800 to-blue-900 bg-clip-text text-transparent tabular-nums">
+        {{ total | currency:'MXN':'symbol-narrow' }}
+      </span>
     </div>
-    <div class="actions">
-      <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
-      <button class="btn-charge" (click)="cobrar()" [disabled]="items.length === 0">Cobrar</button>
+    <div class="flex gap-3 w-full sm:w-auto">
+      <button
+        (click)="cancelar()"
+        class="flex-1 sm:flex-none px-6 py-3 text-xs font-semibold text-slate-500 bg-slate-100 hover:bg-slate-200 rounded-xl border-none font-sans cursor-pointer transition-all active:scale-[0.98]"
+      >
+        Cancelar
+      </button>
+      <button
+        (click)="cobrar()"
+        [disabled]="items.length === 0"
+        class="flex-1 sm:flex-none px-8 py-3 text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-sky-500 hover:opacity-95 rounded-xl border-none font-sans cursor-pointer shadow-lg shadow-blue-200/50 transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed disabled:shadow-none"
+      >
+        Cobrar Venta
+      </button>
     </div>
   </div>
 

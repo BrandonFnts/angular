@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService, Rol } from '../auth.service';
 
@@ -22,6 +22,7 @@ const MENU_OPTIONS: MenuOption[] = [
   imports: [RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class HeaderComponent {
   menuOpen = false;

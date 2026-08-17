@@ -1,20 +1,5 @@
-/* Global styles */
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
+/* Tailwind handles reset via preflight. Minimal global overrides only. */
+body {
   font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-body {
-  background: #fafafa;
-  color: #1a1a2e;
 }

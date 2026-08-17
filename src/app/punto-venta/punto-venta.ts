@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
 import { ProductosService, Producto } from '../productos.service';
@@ -18,6 +18,7 @@ interface ItemVenta {
   imports: [FormsModule, CurrencyPipe],
   templateUrl: './punto-venta.html',
   styleUrl: './punto-venta.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class PuntoVentaComponent implements OnInit {
   searchTerm = '';
@@ -111,7 +112,6 @@ export class PuntoVentaComponent implements OnInit {
   cobrar(): void {
     if (this.items.length === 0) return;
     console.log('Cobrar total:', this.total);
-    // TODO: lógica de cobro
     alert(`Venta realizada por $${this.total.toFixed(2)} MXN`);
     this.items = [];
   }
