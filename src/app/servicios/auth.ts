@@ -10,16 +10,10 @@ export interface Usuario {
   rol: Rol;
 }
 
-const USUARIOS_MOCK: Usuario[] = [
-  { id: 1, nombre: 'Administrador', email: 'admin@correo.com', password: 'Admin123!', rol: 'administrador' },
-  { id: 2, nombre: 'Carlos Cajero', email: 'cajero@correo.com', password: 'Cajero123!', rol: 'cajero' },
-  { id: 3, nombre: 'Ana Almacén', email: 'almacen@correo.com', password: 'Almacen123!', rol: 'almacenista' },
-  { id: 4, nombre: 'Pedro Cliente', email: 'cliente@correo.com', password: 'Cliente123!', rol: 'cliente' },
-];
-
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private usuarioActual: Usuario | null = null;
+  private usuariosCached: Usuario[] | null = null;
 
   constructor() {
     const stored = localStorage.getItem('usuario');
@@ -32,10 +26,29 @@ export class AuthService {
     }
   }
 
-  login(email: string, password: string): Promise<Usuario> {
+  private async getUsuarios(): Promise<Usuario[]> {
+    if (this.usuariosCached) {
+      return this.usuariosCached;
+    }
+    try {
+      const response = await fetch('/mocks/usuarios.json');
+      if (!response.ok) {
+        throw new Error('No se pudo cargar el archivo de usuarios');
+      }
+      this.usuariosCached = await response.json();
+      return this.usuariosCached || [];
+    } catch (error) {
+      console.error('Error cargando usuarios mock:', error);
+      return [];
+    }
+  }
+
+  async login(email: string, password: string): Promise<Usuario> {
+    const usuarios = await this.getUsuarios();
+    
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const usuario = USUARIOS_MOCK.find(
+        const usuario = usuarios.find(
           (u) => u.email === email && u.password === password
         );
         if (usuario) {

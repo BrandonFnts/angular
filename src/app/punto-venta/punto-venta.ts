@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
-import { ProductosService, Producto } from '../productos.service';
+import { ProductosService, Producto } from '../servicios/productos';
 
 interface ItemVenta {
   id: number;
@@ -26,15 +26,30 @@ export class PuntoVentaComponent implements OnInit {
   items: ItemVenta[] = [];
   showSugerencias = false;
 
+  showCobrarModal = false;
+  montoPago: number | null = null;
+
   private nextId = 1;
   private searchTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(private productosService: ProductosService) {}
+  constructor(private productosService: ProductosService) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   get total(): number {
     return this.items.reduce((sum, i) => sum + i.precio * i.cantidad, 0);
+  }
+
+  get cambio(): number {
+    if (this.montoPago === null || this.montoPago < this.total) {
+      return 0;
+    }
+    return this.montoPago - this.total;
+  }
+
+  get pagoSuficiente(): boolean {
+    if (this.montoPago === null) return false;
+    return this.montoPago >= this.total;
   }
 
   async onSearchFocus(): Promise<void> {
@@ -111,8 +126,34 @@ export class PuntoVentaComponent implements OnInit {
 
   cobrar(): void {
     if (this.items.length === 0) return;
-    console.log('Cobrar total:', this.total);
-    alert(`Venta realizada por $${this.total.toFixed(2)} MXN`);
+    this.montoPago = null;
+    this.showCobrarModal = true;
+  }
+
+  cancelarCobro(): void {
+    this.showCobrarModal = false;
+    this.montoPago = null;
+  }
+
+  pagarMontoExacto(): void {
+    this.montoPago = this.total;
+  }
+
+  pagarConMonto(monto: number): void {
+    this.montoPago = monto;
+  }
+
+  confirmarPago(): void {
+    if (!this.pagoSuficiente) return;
+
+    this.items.forEach((item) => {
+      this.productosService.actualizarStock(item.productoId, item.cantidad);
+    });
+
+    console.log('Cobro registrado exitosamente por:', this.total, 'Pago:', this.montoPago, 'Cambio:', this.cambio);
+
+    this.showCobrarModal = false;
+    this.montoPago = null;
     this.items = [];
   }
 }

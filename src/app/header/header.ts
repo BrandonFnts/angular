@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
-import { AuthService, Rol } from '../auth.service';
+import { AuthService, Rol } from '../servicios/auth';
 
 interface MenuOption {
   label: string;

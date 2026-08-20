@@ -1,0 +1,6 @@
+[
+  { "id": 1, "nombre": "Administrador", "email": "admin@correo.com", "password": "Admin123!", "rol": "administrador" },
+  { "id": 2, "nombre": "Carlos Cajero", "email": "cajero@correo.com", "password": "Cajero123!", "rol": "cajero" },
+  { "id": 3, "nombre": "Ana Almacén", "email": "almacen@correo.com", "password": "Almacen123!", "rol": "almacenista" },
+  { "id": 4, "nombre": "Pedro Cliente", "email": "cliente@correo.com", "password": "Cliente123!", "rol": "cliente" }
+]
